@@ -7,7 +7,7 @@
       };
       spyOn(this.svg, 'rect').andCallThrough();
       spyOn($.fn, 'attr');
-      this.cell = new GraphicCell(this.svg, 0, 0);
+      this.cell = new GraphicCell(this.svg, new Cellule(), 0, 0);
       return this.cell.build();
     });
     it('draws a square', function() {
@@ -28,15 +28,15 @@
       expect($.fn.attr).toHaveBeenCalledWith('stroke', 'black');
       return expect($.fn.attr).toHaveBeenCalledWith('stroke-width', 1);
     });
-    it('changes color', function() {
-      this.cell.changeColor('red');
-      return expect($.fn.attr).toHaveBeenCalledWith('fill', 'red');
-    });
-
     it('handles on click', function() {
       expect(this.cell.rect).toHandle('click');
     });
 
+    it('changes on color on click', function() {
+      var color = this.cell.color;
+      this.cell.rect.click()
+      expect(this.cell.color).toNotBe(color)
+    });
    
   });
 

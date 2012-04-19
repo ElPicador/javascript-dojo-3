@@ -11,16 +11,15 @@
       var i, j;
       for (i = 1; i <= 20; i++) {
         for (j = 1; j <= 20; j++) {
-          this.cells.push(this.addCell(i, j));
+          this.cells.push(this.addCell(i, j));        
         }
       }
-      return console.log(this.cells);
     };
 
     Plateau.prototype.addCell = function(x, y) {
-      var cell;
-      cell = new GraphicCell(this.svg, x, y);
-      cell.build();
+      var cell = new Cellule(x, y);
+      var gc = new GraphicCell(this.svg, cell, x, y);
+      gc.build();
       return cell;
     };
 
@@ -34,16 +33,20 @@
 
   this.GraphicCell = (function() {
 
-    function GraphicCell(svg, x, y) {
+    function GraphicCell(svg, cell, x, y) {
       this.x = x;
       this.y = y;
       this.svg = svg;
+      this.cell = cell;
+      this.color = 'white';
     }
 
     GraphicCell.prototype.build = function() {
       this.rect = $(this.svg.rect());
       var that = this;
       this.rect.on('click', function() {
+        that.cell.toggle();
+        
       });
       this.rect.attr('x', this.x * 20);
       this.rect.attr('y', this.y * 20);
@@ -51,11 +54,11 @@
       this.rect.attr('height', 20);
       this.rect.attr('stroke', 'black');
       this.rect.attr('stroke-width', 1);
-      return this.changeColor('white');
+      return this.rect.attr('fill', this.color);
     };
 
-    GraphicCell.prototype.changeColor = function(color) {
-      return this.rect.attr('fill', color);
+    GraphicCell.prototype.changeColor = function() {
+      return this.rect.attr('fill', this.color);
     };
 
     return GraphicCell;
@@ -64,10 +67,9 @@
 
   this.Cellule = (function() {
 
-    function Cellule(svg, x, y) {
+    function Cellule(x, y) {
       this.x = x;
       this.y = y;
-      this.svg = svg;
       this.dead = true;
     }
 
