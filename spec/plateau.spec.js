@@ -36,6 +36,18 @@
       this.cell.rect.click();
       expect(this.cell.rect.attr).toHaveBeenCalledWith('fill', 'black');
     });
+
+    it('apply white when the cell is dead', function() {
+      this.cell.cell.dead = true;
+      this.cell.applyColor();
+      expect(this.cell.rect.attr).toHaveBeenCalledWith('fill', 'white');
+    });
+
+    it('apply black when the cell is dead', function() {
+      this.cell.cell.dead = false;
+      this.cell.applyColor();
+      expect(this.cell.rect.attr).toHaveBeenCalledWith('fill', 'black');
+    });
   });
 
   describe('cells behavior', function() {
