@@ -7,7 +7,7 @@
       };
       spyOn(this.svg, 'rect').andCallThrough();
       spyOn($.fn, 'attr');
-      this.cell = new Cellule(this.svg, 0, 0);
+      this.cell = new GraphicCell(this.svg, 0, 0);
       return this.cell.build();
     });
     it('draws a square', function() {
@@ -37,23 +37,7 @@
       expect(this.cell.rect).toHandle('click');
     });
 
-    it('toggle on click', function() {
-      this.cell.rect.click();
-      expect(this.cell.isDead()).toBeFalsy();
-    });
-
-    it('changes the color on click', function() {
-      spyOn(this.cell, 'changeColor');
-      this.cell.rect.click();
-      expect(this.cell.changeColor).toHaveBeenCalledWith('black');
-    });
-    it('changes the color back to white on second click', function() {
-      spyOn(this.cell, 'changeColor');
-      this.cell.rect.click();
-      this.cell.rect.click();
-      expect(this.cell.changeColor).toHaveBeenCalledWith('black');
-      expect(this.cell.changeColor).toHaveBeenCalledWith('white');
-    })
+   
   });
 
   describe('cells behavior', function() {
