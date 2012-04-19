@@ -1,11 +1,11 @@
 (function() {
 
-  describe("cellule", function() {
+  describe("cells ui", function() {
     beforeEach(function() {
       this.svg = {
-        rect: function() {}
+        rect: function() { return '<div/>';}
       };
-      spyOn(this.svg, 'rect');
+      spyOn(this.svg, 'rect').andCallThrough();
       spyOn($.fn, 'attr');
       this.cell = new Cellule(this.svg, 0, 0);
       return this.cell.build();
@@ -28,9 +28,49 @@
       expect($.fn.attr).toHaveBeenCalledWith('stroke', 'black');
       return expect($.fn.attr).toHaveBeenCalledWith('stroke-width', 1);
     });
-    return it('changes color', function() {
+    it('changes color', function() {
       this.cell.changeColor('red');
       return expect($.fn.attr).toHaveBeenCalledWith('fill', 'red');
+    });
+
+    it('handles on click', function() {
+      expect(this.cell.rect).toHandle('click');
+    });
+
+    it('toggle on click', function() {
+      this.cell.rect.click();
+      expect(this.cell.isDead()).toBeFalsy();
+    });
+
+    it('changes the color on click', function() {
+      spyOn(this.cell, 'changeColor');
+      this.cell.rect.click();
+      expect(this.cell.changeColor).toHaveBeenCalledWith('black');
+    });
+    it('changes the color back to white on second click', function() {
+      spyOn(this.cell, 'changeColor');
+      this.cell.rect.click();
+      this.cell.rect.click();
+      expect(this.cell.changeColor).toHaveBeenCalledWith('black');
+      expect(this.cell.changeColor).toHaveBeenCalledWith('white');
+    })
+  });
+
+  describe('cells behavior', function() {
+    beforeEach(function() {
+      this.cell = new Cellule(null, 0, 0);
+    });
+    it('is dead on creation',function() {
+      expect(this.cell.isDead()).toBeTruthy();
+    });
+    it('can be made alive', function () {
+      this.cell.toggle();
+      expect(this.cell.isDead()).toBeFalsy();
+    });
+    it('can be made dead again', function () {
+      this.cell.toggle();
+      this.cell.toggle();
+      expect(this.cell.isDead()).toBeTruthy();
     });
   });
 

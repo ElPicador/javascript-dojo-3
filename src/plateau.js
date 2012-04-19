@@ -37,10 +37,34 @@
     function Cellule(svg, x, y) {
       this.x = x;
       this.y = y;
-      this.rect = $(svg.rect());
+      this.svg = svg;
+      this.dead = true;
+    }
+
+    Cellule.prototype.isDead = function() {
+      return this.dead;
+    }
+
+    Cellule.prototype.toggle = function () {
+      this.dead = !this.dead;
+    }
+
+    Cellule.prototype.applyColor = function () {
+      if(this.isDead()) {
+        this.changeColor('white');  
+      }
+      else {
+        this.changeColor('black');
+      }
     }
 
     Cellule.prototype.build = function() {
+      this.rect = $(this.svg.rect());
+      var that = this;
+      this.rect.on('click', function() {
+        that.toggle();
+        that.applyColor();        
+      });
       this.rect.attr('x', this.x * 20);
       this.rect.attr('y', this.y * 20);
       this.rect.attr('width', 20);
