@@ -11,7 +11,7 @@
       var i, j;
       for (i = 1; i <= 20; i++) {
         for (j = 1; j <= 20; j++) {
-          this.cells.push(this.addCell(i, j));        
+          this.cells.push(this.addCell(i, j));
         }
       }
     };
@@ -38,7 +38,7 @@
       this.y = y;
       this.svg = svg;
       this.cell = cell;
-      this.color = 'white';
+      this.cell.observeToggle($.proxy(this.applyColor, this));
     }
 
     GraphicCell.prototype.build = function() {
@@ -46,7 +46,6 @@
       var that = this;
       this.rect.on('click', function() {
         that.cell.toggle();
-        
       });
       this.rect.attr('x', this.x * 20);
       this.rect.attr('y', this.y * 20);
@@ -54,11 +53,11 @@
       this.rect.attr('height', 20);
       this.rect.attr('stroke', 'black');
       this.rect.attr('stroke-width', 1);
-      return this.rect.attr('fill', this.color);
+      return this.rect.attr('fill', 'white');
     };
 
-    GraphicCell.prototype.changeColor = function() {
-      return this.rect.attr('fill', this.color);
+    GraphicCell.prototype.applyColor = function(cell) {
+      this.rect.attr('fill', cell.isDead() ? 'white' : 'black');
     };
 
     return GraphicCell;
@@ -73,15 +72,19 @@
       this.dead = true;
     }
 
+    Cellule.prototype.observeToggle = function(onToggle) {
+      this.onToggle = onToggle;
+    }
+
     Cellule.prototype.isDead = function() {
       return this.dead;
     }
 
     Cellule.prototype.toggle = function () {
       this.dead = !this.dead;
+      if (this.onToggle) this.onToggle(this);
     }
 
- 
     return Cellule;
 
   })();

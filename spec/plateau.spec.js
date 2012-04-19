@@ -33,11 +33,9 @@
     });
 
     it('changes on color on click', function() {
-      var color = this.cell.color;
-      this.cell.rect.click()
-      expect(this.cell.color).toNotBe(color)
+      this.cell.rect.click();
+      expect(this.cell.rect.attr).toHaveBeenCalledWith('fill', 'black');
     });
-   
   });
 
   describe('cells behavior', function() {
