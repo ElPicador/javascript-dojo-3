@@ -7,7 +7,7 @@
       };
       spyOn(this.svg, 'rect').andCallThrough();
       spyOn($.fn, 'attr');
-      this.cell = new GraphicCell(this.svg, new Cellule(), 0, 0);
+      this.cell = new GraphicCell(this.svg, new Cell(), 0, 0);
       return this.cell.build();
     });
     it('draws a square', function() {
@@ -40,7 +40,7 @@
 
   describe('cells behavior', function() {
     beforeEach(function() {
-      this.cell = new Cellule(null, 0, 0);
+      this.cell = new Cell(null, 0, 0);
     });
     it('is dead on creation',function() {
       expect(this.cell.isDead()).toBeTruthy();

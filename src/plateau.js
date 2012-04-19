@@ -17,7 +17,7 @@
     };
 
     Plateau.prototype.addCell = function(x, y) {
-      var cell = new Cellule(x, y);
+      var cell = new Cell(x, y);
       var gc = new GraphicCell(this.svg, cell, x, y);
       gc.build();
       return cell;
@@ -64,28 +64,28 @@
 
   })();
 
-  this.Cellule = (function() {
+  this.Cell = (function() {
 
-    function Cellule(x, y) {
+    function Cell(x, y) {
       this.x = x;
       this.y = y;
       this.dead = true;
     }
 
-    Cellule.prototype.observeToggle = function(onToggle) {
+    Cell.prototype.observeToggle = function(onToggle) {
       this.onToggle = onToggle;
     }
 
-    Cellule.prototype.isDead = function() {
+    Cell.prototype.isDead = function() {
       return this.dead;
     }
 
-    Cellule.prototype.toggle = function () {
+    Cell.prototype.toggle = function () {
       this.dead = !this.dead;
       if (this.onToggle) this.onToggle(this);
     }
 
-    return Cellule;
+    return Cell;
 
   })();
 
