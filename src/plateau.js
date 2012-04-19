@@ -53,8 +53,8 @@
       return this.rect.attr('fill', 'white');
     };
 
-    GraphicCell.prototype.applyColor = function(cell) {
-      this.rect.attr('fill', cell.isDead() ? 'white' : 'black');
+    GraphicCell.prototype.applyColor = function() {
+      this.rect.attr('fill', this.cell.isDead() ? 'white' : 'black');
     };
 
     return GraphicCell;
