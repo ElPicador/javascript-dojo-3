@@ -43,10 +43,7 @@
 
     GraphicCell.prototype.build = function() {
       this.rect = $(this.svg.rect());
-      var that = this;
-      this.rect.on('click', function() {
-        that.cell.toggle();
-      });
+      this.rect.on('click', $.proxy(this.cell.toggle, this.cell));
       this.rect.attr('x', this.x * 20);
       this.rect.attr('y', this.y * 20);
       this.rect.attr('width', 20);
