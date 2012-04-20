@@ -11,13 +11,13 @@
       var i, j;
       for (i = 1; i <= 20; i++) {
         for (j = 1; j <= 20; j++) {
-          this.cells.push(this.addCell(i, j));        
+          this.cells.push(this.addCell(i, j));
         }
       }
     };
 
     Plateau.prototype.addCell = function(x, y) {
-      var cell = new Cellule(x, y);
+      var cell = new Cell(x, y);
       var gc = new GraphicCell(this.svg, cell, x, y);
       gc.build();
       return cell;
@@ -38,51 +38,51 @@
       this.y = y;
       this.svg = svg;
       this.cell = cell;
-      this.color = 'white';
+      this.cell.observeToggle($.proxy(this.applyColor, this));
     }
 
     GraphicCell.prototype.build = function() {
       this.rect = $(this.svg.rect());
-      var that = this;
-      this.rect.on('click', function() {
-        that.cell.toggle();
-        
-      });
+      this.rect.on('click', $.proxy(this.cell.toggle, this.cell));
       this.rect.attr('x', this.x * 20);
       this.rect.attr('y', this.y * 20);
       this.rect.attr('width', 20);
       this.rect.attr('height', 20);
       this.rect.attr('stroke', 'black');
       this.rect.attr('stroke-width', 1);
-      return this.rect.attr('fill', this.color);
+      return this.rect.attr('fill', 'white');
     };
 
-    GraphicCell.prototype.changeColor = function() {
-      return this.rect.attr('fill', this.color);
+    GraphicCell.prototype.applyColor = function() {
+      this.rect.attr('fill', this.cell.isDead() ? 'white' : 'black');
     };
 
     return GraphicCell;
 
   })();
 
-  this.Cellule = (function() {
+  this.Cell = (function() {
 
-    function Cellule(x, y) {
+    function Cell(x, y) {
       this.x = x;
       this.y = y;
       this.dead = true;
     }
 
-    Cellule.prototype.isDead = function() {
+    Cell.prototype.observeToggle = function(onToggle) {
+      this.onToggle = onToggle;
+    }
+
+    Cell.prototype.isDead = function() {
       return this.dead;
     }
 
-    Cellule.prototype.toggle = function () {
+    Cell.prototype.toggle = function () {
       this.dead = !this.dead;
+      if (this.onToggle) this.onToggle(this);
     }
 
- 
-    return Cellule;
+    return Cell;
 
   })();
 
