@@ -9,22 +9,42 @@
 
     Plateau.prototype.build = function() {
       var i, j;
-      for (i = 1; i <= 20; i++) {
-        for (j = 1; j <= 20; j++) {
+      for (i = 0; i < 20; i++) {
+        for (j = 0; j < 20; j++) {
           this.cells.push(this.addCell(i, j));
         }
       }
     };
 
     Plateau.prototype.addCell = function(x, y) {
-      var cell = new Cell(x, y);
+      var cell = new Cell(x, y, true);
       var gc = new GraphicCell(this.svg, cell, x, y);
       gc.build();
       return cell;
     };
 
     Plateau.prototype.cellAt = function(x, y) {
-      return this.cells[(x % 20 - 1 + 20) * (y % 20 - 1)];
+      modulo_x = x % 20;
+      if(modulo_x < 0) {
+        modulo_x = modulo_x + 20;
+      }
+      modulo_y = y % 20;
+      if(modulo_y < 0) {
+        modulo_y = modulo_y + 20;
+      }
+      return this.cells[(modulo_x) * 20 + (modulo_y)];
+    };
+
+    Plateau.prototype.evolve = function() {
+      return this;
+    };
+
+    Plateau.prototype.countSurroundingLiveCells = function(x, y) {
+      count = 0;
+      if(this.cellAt(x - 1, y - 1).isAlive()) {
+        count++;
+      }
+      return 0;
     };
 
     return Plateau;
@@ -63,10 +83,10 @@
 
   this.Cell = (function() {
 
-    function Cell(x, y) {
+    function Cell(x, y, dead) {
       this.x = x;
       this.y = y;
-      this.dead = true;
+      this.dead = dead;
     }
 
     Cell.prototype.observeToggle = function(onToggle) {
@@ -77,9 +97,26 @@
       return this.dead;
     }
 
+    Cell.prototype.isAlive = function() {
+      return !this.dead;
+    }
+
     Cell.prototype.toggle = function () {
       this.dead = !this.dead;
       if (this.onToggle) this.onToggle(this);
+    }
+
+    Cell.prototype.evolve = function(liveCellsAround) {
+      switch(liveCellsAround) {
+        case 2:
+          return this;
+        case 3:
+          return new Cell(this.x, this.y, false);
+        case 0:
+        case 1:
+        default:
+          return new Cell(this.x, this.y, true);
+      }
     }
 
     return Cell;
